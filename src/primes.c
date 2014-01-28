@@ -21,27 +21,32 @@ int main(int argc, char** argv) {
     }
 
     eratosthenesSieve(upperBound);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void eratosthenesSieve(int upperBound) {
-    int upperBoundSqrt = (int) sqrt((double) upperBound);
+    int i;
+    _Bool *composite;
 
-    _Bool *isComposite = malloc((upperBound + 1) * sizeof(_Bool));
-    for (int m = 2; m <= upperBoundSqrt; m++) {
-        if (!isComposite[m]) {
-            printf("%d ", m);
-            for (int k = m * m; k <= upperBound; k += m) {
-                isComposite[k] = true;
+    if ((composite = malloc((upperBound + 1) * sizeof(_Bool))) == NULL) {
+        perror("Failed to allocate memory");
+        exit(EXIT_FAILURE);
+    }
+
+    int upperBoundSqrt = (int) sqrt((double) upperBound);
+    for (i = 2; i <= upperBoundSqrt; i++) {
+        if (!composite[i]) {
+            for (int j = i * i; j <= upperBound; j += i) {
+                composite[j] = true;
             }
         }
     }
-    for (int m = upperBoundSqrt; m <= upperBound; m++) {
-        if (!isComposite[m]) {
-            printf("%d ", m);
+    for (i = 2; i <= upperBound; i++) {
+        if (!composite[i]) {
+            printf("%d ", i);
         }
     }
     printf("\n");
 
-    free(isComposite);
+    free(composite);
 }
