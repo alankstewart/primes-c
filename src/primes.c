@@ -30,15 +30,6 @@ int main(int argc, char** argv) {
     scanf("%d", &number);
     pthread_join(thread, (void**) &composite);
 
-#ifdef DEBUG
-    for (int i = 2; i <= upperBound; i++) {
-        if (!composite[i]) {
-            printf("%d ", i);
-        }
-    }
-    printf("\n");
-#endif
-
     if (number < 2 || number > upperBound) {
         fprintf(stderr, "Number must be between 2 and %d\n", upperBound);
         exit(EXIT_FAILURE);
@@ -49,6 +40,16 @@ int main(int argc, char** argv) {
     } else {
         printf("%d is prime\n", number);
     }
+
+#ifdef DEBUG
+    printf("\n");
+    for (int i = 2; i <= upperBound; i++) {
+        if (!composite[i]) {
+            printf("%d ", i);
+        }
+    }
+    printf("\n");
+#endif
 
     free(composite);
     return EXIT_SUCCESS;
