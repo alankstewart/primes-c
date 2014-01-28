@@ -3,13 +3,13 @@ default: all
 all: primes
 
 clean:
-	rm -f primes primes.out
+	rm -f primes
 
 primes: src/primes.c
-	gcc -O3 src/primes.c -lm -o primes
+	gcc -O3 -lm  src/primes.c -o primes
 
 debug:
-	gcc -O3 -DDEBUG src/primes.c -lm -o primes
+	gcc -O3 -lm -DDEBUG src/primes.c -o primes
 
 bench: primes
 	./primes 100
