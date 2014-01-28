@@ -1,59 +1,47 @@
 // Program primes.c by Alan K Stewart
 // Calculates prime numbers using the Sieve of Eratosthenes
 
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
 
-int sieve(int);
+void eratosthenesSieve(int upperBound);
 
 int main(int argc, char** argv) {
-    int num;
+    int upperBound;
 
     if (argc == 1) {
-        num = 100;
+        upperBound = 100;
     } else if (argc > 2 || atoi(argv[1]) < 2) {
         printf("Usage: primes <number greater than 1>\n");
         exit(EXIT_FAILURE);
     } else {
-        num = atoi(argv[1]);
+        upperBound = atoi(argv[1]);
     }
 
-    printf("*** Prime numbers to %d ***\n", num);
-    printf("\n\nThere are %d prime numbers\n", sieve(num));
+    eratosthenesSieve(upperBound);
     return 0;
 }
 
-int sieve(int num) {
-    int N, k, m, mm, sqrtN, num_primes, line_count;
-    char *n, *i, *j;
+void eratosthenesSieve(int upperBound) {
+    int upperBoundSqrt = (int) sqrt((double) upperBound);
 
-    N = (num - 1) / 2;
-    num_primes = line_count = 1;
-    n = (char*) calloc(N, sizeof(char));
-
-    sqrtN = ((int) sqrt((double) 2 * N + 3)) + 1;
-    for (k = 3, m = 0, i = n; k <= sqrtN; k += 2, ++m, ++i) {
-        if (*i == 0) {
-            for (mm = m + k, j = i + k; mm < N; mm += k, j += k) {
-                *j = 1;
+    _Bool *isComposite = malloc((upperBound + 1) * sizeof(_Bool));
+    for (int m = 2; m <= upperBoundSqrt; m++) {
+        if (!isComposite[m]) {
+            printf("%d ", m);
+            for (int k = m * m; k <= upperBound; k += m) {
+                isComposite[k] = true;
             }
         }
     }
-
-    printf("\n2\t");
-    for (k = 3, m = 0, i = n; m < N; k += 2, ++m, ++i) {
-        if (*i == 0) {
-            num_primes++;
-            line_count++;
-            if (line_count > 8) {
-                line_count = 1;
-                printf("\n");
-            }
-            printf("%d\t", k);
+    for (int m = upperBoundSqrt; m <= upperBound; m++) {
+        if (!isComposite[m]) {
+            printf("%d ", m);
         }
     }
+    printf("\n");
 
-    free((char*) n);
-    return num_primes;
+    free(isComposite);
 }

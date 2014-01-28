@@ -1,2 +1,7 @@
+.cproject
+.project
+.settings
+.DS_Store
+*.out
 primes
-
+Release
