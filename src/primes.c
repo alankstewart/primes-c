@@ -12,8 +12,7 @@
 void *eratosthenesSieve(int *upperBound);
 
 int main(int argc, char** argv) {
-    int upperBound, number;
-
+    int upperBound;
     if (argc == 1) {
         upperBound = 100;
     } else if (argc > 2 || atoi(argv[1]) < 2) {
@@ -23,6 +22,7 @@ int main(int argc, char** argv) {
         upperBound = atoi(argv[1]);
     }
 
+    int number;
     pthread_t thread;
     _Bool *composite;
     pthread_create(&thread, NULL, (void*(*)(void*)) eratosthenesSieve, &upperBound);
