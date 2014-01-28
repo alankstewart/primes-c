@@ -26,12 +26,21 @@ int main(int argc, char** argv) {
     pthread_t thread;
     _Bool *composite;
     pthread_create(&thread, NULL, (void*(*)(void*)) eratosthenesSieve, &upperBound);
+<<<<<<< Updated upstream
     printf("Enter a number: ");
     scanf("%d", &number);
     pthread_join(thread, (void**) &composite);
 
     if (number > upperBound) {
         fprintf(stderr, "Number must be less than or equal to upper bound\n");
+=======
+    printf("Enter a number between 2 and %d: ", upperBound);
+    scanf("%d", &number);
+    pthread_join(thread, (void**) &composite);
+
+    if (number < 2 || number > upperBound) {
+        fprintf(stderr, "Number must be between 2 and %d\n", upperBound);
+>>>>>>> Stashed changes
         exit(EXIT_FAILURE);
     }
 
