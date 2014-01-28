@@ -26,21 +26,21 @@ int main(int argc, char** argv) {
     pthread_t thread;
     _Bool *composite;
     pthread_create(&thread, NULL, (void*(*)(void*)) eratosthenesSieve, &upperBound);
-<<<<<<< Updated upstream
-    printf("Enter a number: ");
-    scanf("%d", &number);
-    pthread_join(thread, (void**) &composite);
-
-    if (number > upperBound) {
-        fprintf(stderr, "Number must be less than or equal to upper bound\n");
-=======
     printf("Enter a number between 2 and %d: ", upperBound);
     scanf("%d", &number);
     pthread_join(thread, (void**) &composite);
 
+#ifdef DEBUG
+    for (int i = 2; i <= upperBound; i++) {
+        if (!composite[i]) {
+            printf("%d ", i);
+        }
+    }
+    printf("\n");
+#endif
+
     if (number < 2 || number > upperBound) {
         fprintf(stderr, "Number must be between 2 and %d\n", upperBound);
->>>>>>> Stashed changes
         exit(EXIT_FAILURE);
     }
 
@@ -55,7 +55,6 @@ int main(int argc, char** argv) {
 }
 
 void *eratosthenesSieve(int *upperBound) {
-    int i;
     _Bool *composite;
 
     if ((composite = malloc((*upperBound + 1) * sizeof(_Bool))) == NULL) {
@@ -64,23 +63,13 @@ void *eratosthenesSieve(int *upperBound) {
     }
 
     int upperBoundSqrt = (int) sqrt((double) *upperBound);
-    for (i = 2; i <= upperBoundSqrt; i++) {
+    for (int i = 2; i <= upperBoundSqrt; i++) {
         if (!composite[i]) {
             for (int j = i * i; j <= *upperBound; j += i) {
                 composite[j] = true;
             }
         }
     }
-
-#ifdef DEBUG
-    printf("\n");
-    for (i = 2; i <= *upperBound; i++) {
-        if (!composite[i]) {
-            printf("%d ", i);
-        }
-    }
-    printf("\n");
-#endif
 
     return composite;
 }
