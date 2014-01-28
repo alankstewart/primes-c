@@ -37,11 +37,7 @@ int main(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
 
-    if (composite[number]) {
-        printf("%d is not prime\n", number);
-    } else {
-        printf("%d is prime\n", number);
-    }
+    printf(composite[number] ? "%d is not prime\n" : "%d is prime\n", number);
 
 #ifdef DEBUG
     printf("\n");
