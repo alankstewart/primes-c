@@ -9,31 +9,31 @@
 #include <pthread.h>
 #include <errno.h>
 
-void *eratosthenesSieve(int *upperBound);
+void *eratosthenesSieve(int *limit);
 
 int main(int argc, char** argv) {
-    int upperBound, number;
+    int limit, number;
     _Bool *composite;
     pthread_t thread;
 
     if (argc == 1) {
-        upperBound = 100;
+        limit = 100;
     } else if (argc > 2 || atoi(argv[1]) < 2) {
-        printf("Usage: primes <number greater than 1>\n");
+        fprintf(stderr, "Must be 2 or greater\n");
         exit(EXIT_FAILURE);
     } else {
-        upperBound = atoi(argv[1]);
+        limit = atoi(argv[1]);
     }
 
-    pthread_create(&thread, NULL, (void*(*)(void*)) eratosthenesSieve, &upperBound);
+    pthread_create(&thread, NULL, (void*(*)(void*)) eratosthenesSieve, &limit);
 
-    printf("Enter a number between 2 and %d: ", upperBound);
+    printf("Enter a number between 2 and %d: ", limit);
     scanf("%d", &number);
 
     pthread_join(thread, (void**) &composite);
 
-    if (number < 2 || number > upperBound) {
-        fprintf(stderr, "Number must be between 2 and %d\n", upperBound);
+    if (number < 2 || number > limit) {
+        fprintf(stderr, "Number must be between 2 and %d\n", limit);
         exit(EXIT_FAILURE);
     }
 
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 
 #ifdef DEBUG
     printf("\n");
-    for (int i = 2; i <= upperBound; i++) {
+    for (int i = 2; i <= limit; i++) {
         if (!composite[i]) {
             printf("%d ", i);
         }
@@ -53,22 +53,21 @@ int main(int argc, char** argv) {
     return EXIT_SUCCESS;
 }
 
-void *eratosthenesSieve(int *upperBound) {
+void *eratosthenesSieve(int *limit) {
     _Bool *composite;
 
-    if ((composite = malloc((*upperBound + 1) * sizeof(_Bool))) == NULL) {
+    if ((composite = malloc((*limit + 1) * sizeof(_Bool))) == NULL) {
         perror("Failed to allocate memory");
         exit(EXIT_FAILURE);
     }
 
-    int upperBoundSqrt = (int) sqrt((double) *upperBound);
+    int upperBoundSqrt = (int) floor(sqrt((double) *limit));
     for (int i = 2; i <= upperBoundSqrt; i++) {
         if (!composite[i]) {
-            for (int j = i * i; j <= *upperBound; j += i) {
+            for (int j = i * i; j <= *limit; j += i) {
                 composite[j] = true;
             }
         }
     }
-
     return composite;
 }
