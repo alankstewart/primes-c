@@ -12,6 +12,7 @@
 void *eratosthenesSieve(int *limit);
 
 int main(int argc, char** argv) {
+
     int limit, number;
     _Bool *composite;
     pthread_t thread;
@@ -54,6 +55,7 @@ int main(int argc, char** argv) {
 }
 
 void *eratosthenesSieve(int *limit) {
+
     _Bool *composite;
 
     if ((composite = malloc((*limit + 1) * sizeof(_Bool))) == NULL) {
