@@ -61,8 +61,8 @@ void *eratosthenesSieve(int *limit) {
         exit(EXIT_FAILURE);
     }
 
-    int upperBoundSqrt = (int) floor(sqrt((double) *limit));
-    for (int i = 2; i <= upperBoundSqrt; i++) {
+    int limitSqrt = (int) floor(sqrt((double) *limit));
+    for (int i = 2; i <= limitSqrt; i++) {
         if (!composite[i]) {
             for (int j = i * i; j <= *limit; j += i) {
                 composite[j] = true;
