@@ -9,12 +9,18 @@
 #include <pthread.h>
 #include <errno.h>
 
-void *eratosthenesSieve(int *limit);
+typedef struct {
+    int limit;
+    _Bool *composite;
+} sieve_args;
+
+void *eratosthenesSieve(void *arg);
 
 int main(int argc, char** argv) {
 
     int limit, number;
     _Bool *composite;
+    sieve_args sieve;
     pthread_t thread;
 
     if (argc == 1) {
@@ -26,12 +32,19 @@ int main(int argc, char** argv) {
         limit = atoi(argv[1]);
     }
 
-    pthread_create(&thread, NULL, (void*(*)(void*)) eratosthenesSieve, &limit);
+    if ((composite = malloc((limit + 1) * sizeof(_Bool))) == NULL) {
+        perror("Failed to allocate memory");
+        exit(EXIT_FAILURE);
+    }
+    sieve.limit = limit;
+    sieve.composite = composite;
+
+    pthread_create(&thread, NULL, eratosthenesSieve, &sieve);
 
     printf("Enter a number between 2 and %d: ", limit);
     scanf("%d", &number);
 
-    pthread_join(thread, (void**) &composite);
+    pthread_join(thread, NULL);
 
     if (number < 2 || number > limit) {
         fprintf(stderr, "Number must be between 2 and %d\n", limit);
@@ -54,22 +67,20 @@ int main(int argc, char** argv) {
     return EXIT_SUCCESS;
 }
 
-void *eratosthenesSieve(int *limit) {
+void *eratosthenesSieve(void *arg) {
 
-    _Bool *composite;
+    sieve_args* sieve = (sieve_args*) arg;
+    int limit = sieve->limit;
+    _Bool *composite = sieve->composite;
 
-    if ((composite = malloc((*limit + 1) * sizeof(_Bool))) == NULL) {
-        perror("Failed to allocate memory");
-        exit(EXIT_FAILURE);
-    }
-
-    int limitSqrt = (int) floor(sqrt((double) *limit));
+    int limitSqrt = (int) floor(sqrt((double) limit));
     for (int i = 2; i <= limitSqrt; i++) {
         if (!composite[i]) {
-            for (int j = i * i; j <= *limit; j += i) {
+            for (int j = i * i; j <= limit; j += i) {
                 composite[j] = true;
             }
         }
     }
-    return composite;
+
+   pthread_exit(0);
 }
